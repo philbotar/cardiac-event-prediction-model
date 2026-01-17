@@ -19,6 +19,8 @@ A cardiac event is an event that occurs to the heart. Examples include
 
 We will use [MIMIC-IV Waveform Database](https://physionet.org/content/mimic4wdb/0.1.0/). This has all the data from bedside monitors in waveform on which we can create a model to watch.
 
+---
+
 ## What are the Waveforms? How can they help us ?
 
 Waveforms in this instance are different measures for the patient.
@@ -48,3 +50,70 @@ A PPG (Photoplethysmography) graph for the heart shows blood volume changes in t
 A PPG graph for the heart shows blood volume changes in tissues as a waveform, reflecting the heart's pumping action, with peaks representing heartbeats, used in smartwatches for HR/SpO2, relying on light absorption by blood, and revealing arterial stiffness via waveform shape.
 
 ### ABP (Arterial Blood Pressure)
+
+This the force exerted by blood against arterial wall as the heart pumps. It has Systolic Pressure, which is the peak pressure during heart contraction, and Diastolic Pressure, which is the minimum pressure when the heart relaxes between beats.
+
+The ABP Graph shows the pulsatile pattern, going in the following
+
+1. Sharp upstroke (systolic rise) as the ventricle ejects blood
+2. A peak (systolic pressure)
+3. A decline with a small notch called the dicrotic notch (marks aortic valve closure)
+4. Gradual decay to the trough (diastolic pressure)
+
+This repeats over time.
+
+### RESP (Respiration)
+
+Respiratory Rate/Waveform (RESP) measures breathing activity, typically via impedance pneumography (electrodes detect chest wall movement) or airflow sensors.
+
+RESP waveform shows
+
+- Inspiration: Upward deflection as the chest expands
+- Expiration: Downward return as it contracts
+- A smooth wave pattern.
+
+The y-axis represents relative chest impedance or airflow volume, and the x-axis is time. Respiratory rate (breaths per minute) is derived from counting wave cycles. Normal adult rate is 12–20 breaths/min.
+
+---
+
+## What are Numerics and How can they help us?
+
+| Type of Measurement     | Specific Signals/Labels              | Description & Sampling                                                |
+| :---------------------- | ------------------------------------ | --------------------------------------------------------------------- |
+| Heart Rate              | HR, Pulse (SpO2), Pulse (ABP)        | Beats per minute derived from ECG, PPG, or Blood Pressure.            |
+| Oxygen Saturation       | SpO2                                 | Arterial oxygen saturation (%) derived from the PPG sensor.           |
+| Blood Pressure (NIBP)   | NBPs, NBPd, NBPm                     | Non-invasive systolic, diastolic, and mean BP (sampled at intervals). |
+| Invasive Blood Pressure | ABPs, ABPd, ABPm                     | Systolic, diastolic, and mean values derived from the ABP waveform.   |
+| Respiratory Metrics     | Resp Rate                            | Breath rate derived from the RESP waveform.                           |
+| Temperature             | Tblood, Tcore, Tesoph                | Body temperature from various sites (sampled infrequently).           |
+| Miscellaneous           | Perf (Perfusion Index), ST elevation | Derived quality or diagnostic metrics from the monitor.               |
+
+### Heart Rate
+
+Normal resting HR for adults is 60–100 bpm. Tachycardia (>100 bpm) or bradycardia (<60 bpm) can indicate stress, arrhythmias, or impending cardiac events. HR variability (HRV) — the variation in time between beats is a strong predictor of cardiac risk.
+
+### Oxygen Saturation
+
+SpO2 measures the percentage of hemoglobin in arterial blood that is saturated with oxygen. Normal range is 95–100%. Values below 90% indicate hypoxemia. Desaturation often precedes or accompanies cardiac deterioration, with terminal drops occurring ~14 minutes before circulatory arrest.
+
+### Blood Pressure - Non-Invasive (NIBP)
+
+NIBP is measured intermittently using an oscillometric cuff. It provides:
+
+- NBPs (Systolic): Peak pressure during ventricular contraction
+- NBPd (Diastolic): Minimum pressure during relaxation
+- NBPm (Mean): Weighted average, approximated as DBP + ⅓(SBP - DBP)
+
+Normal adult BP is ~120/80 mmHg. Hypotension (SBP <90 or MAP <65 mmHg) is associated with increased mortality and poor outcomes.
+
+### Invasive Blood Pressure (ABPs, ABPd, ABPm)
+
+These values come directly from a small tube (catheter) placed inside an artery, giving real-time, beat-by-beat readings from the ABP waveform. This is more accurate than the arm cuff method, especially when a patient's condition is unstable. Research shows that diastolic pressure (the lower number) is better at predicting patient outcomes than systolic or mean pressure.
+
+### Respiratory Rate (Resp Rate)
+
+Breath rate in breaths per minute, derived from the RESP waveform. Normal adult range is 12–20 breaths/min. Tachypnea (>20) may indicate distress, hypoxia, or metabolic acidosis. Bradypnea or apnea can precede cardiac events. Abnormal respiratory patterns often appear before hemodynamic collapse.
+
+### Temperature
+
+Body temperature measured at various sites—blood, core (rectal/bladder), or esophageal. Sampled infrequently. Fever may indicate infection or inflammation; hypothermia is used therapeutically post-cardiac arrest (targeted temperature management). Extreme deviations can affect cardiac electrical stability.
