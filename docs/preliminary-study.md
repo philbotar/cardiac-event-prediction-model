@@ -117,3 +117,9 @@ Breath rate in breaths per minute, derived from the RESP waveform. Normal adult 
 ### Temperature
 
 Body temperature measured at various sites—blood, core (rectal/bladder), or esophageal. Sampled infrequently. Fever may indicate infection or inflammation; hypothermia is used therapeutically post-cardiac arrest (targeted temperature management). Extreme deviations can affect cardiac electrical stability.
+
+## How do we use these metrics to determine what our model should look for?
+
+We should start simple, going with a binary classification.
+
+For each Hour / 30 Min / 15 Min, we identify if there will be a cardiac event. We predict if an event will occur within a fixed window. Aswell we'll start with only numerics, and progress to waveforms later.
