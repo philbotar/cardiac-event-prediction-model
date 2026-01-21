@@ -11,7 +11,7 @@ Before we start to train the model, we need to clean the data. For training I de
 
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │  MIMIC-IV   │     │     S3      │     │   AWS Glue  │     │     S3      │     │  SageMaker  │
-│  Waveform   │────▶│   Bucket    │────▶│     ETL     │────▶│   Bucket    │────▶│  Training   │
+│  Waveform   │────▶│   Bucket    │────▶│   Athena    │────▶│   Bucket    │────▶│  Training   │
 │  Database   │     │   (Raw)     │     │  SageMaker  │     │ (Processed) │     │             │
 └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
                            │                   │                   │
@@ -52,3 +52,25 @@ We will be using terraform to provision our pipeline. This allows anyone who loo
 ## Notes
 
 From the dataset, we have compressed csv's for numerical data, and .dat with a corresponding .header file to transform. For the pipeline, it will intially just have the S3 bucket, then AWS Glue(?) to open the csvs (Potentially could just do this on EC2 with a recursive function). Then Label if needed, and any extrapolation for missing data. Aswell for all this, in order to identify which data has a cardiac event, we will need to use the [MIMIC-IV clinical database](https://physionet.org/content/mimiciv/3.1/) to cross join the data. Then we know that for x patient, they had a cardiac event, and potentially deduce time of event from the data. We may be able to query from Googles BigQuery for the clinical database, saving us the headache.
+
+19/1/26
+
+Going to provision the pipeline on AWS.
+
+1. Provision the S3 Bucket for Raw Data [x]
+
+- Created with the default Settings in ap-southeast-2
+
+2. Download the eICU Data onto the Bucket [x]
+
+- Using ec2 intermediary to download then sync to s3
+- Simple EC2 setup, t3.micro with 24GiB gp3 storage
+- Ran `wget -r -N -c -np https://physionet.org/files/eicu-crd-demo/2.0.1/` on the EC2 Instance (Switched Datasets initially, will see how it goes. Reason for switching was better numerics)
+- Create IAM Role for the EC2 instance for being able to sync to the bucket
+- cd into the physioNet directory thats created, then execute `aws s3 sync . s3://cardio-ai-raw-data/eICU`
+
+3. Initialise AWS Glue to process the data from the S3 Bucket [x]
+
+- Need to create a crawler to go through my s3 bucket - Set up the crawler and add the S3 Bucket as the data source - Create IAM role for the crawler to access S3 - Create new Database for the Data (eicu_db) for this one - Set time schedule to on-demand, since i dont have live data at this point - Create and Run - Data ends up in the data catalog for processing - Had issue with: Tables not being in a seperate folder for each, caused issues with table finding.
+
+4. Set up Athena to query and Join the data [ ]
