@@ -65,12 +65,19 @@ Going to provision the pipeline on AWS.
 
 - Using ec2 intermediary to download then sync to s3
 - Simple EC2 setup, t3.micro with 24GiB gp3 storage
-- Ran `wget -r -N -c -np https://physionet.org/files/eicu-crd-demo/2.0.1/` on the EC2 Instance (Switched Datasets initially, will see how it goes. Reason for switching was better numerics)
+- Ran the download command on the EC2 Instance (wget for MIMIC-IV).
 - Create IAM Role for the EC2 instance for being able to sync to the bucket
 - cd into the physioNet directory thats created, then execute `aws s3 sync . s3://cardio-ai-raw-data/eICU`
 
 3. Initialise AWS Glue to process the data from the S3 Bucket [x]
 
-- Need to create a crawler to go through my s3 bucket - Set up the crawler and add the S3 Bucket as the data source - Create IAM role for the crawler to access S3 - Create new Database for the Data (eicu_db) for this one - Set time schedule to on-demand, since i dont have live data at this point - Create and Run - Data ends up in the data catalog for processing - Had issue with: Tables not being in a seperate folder for each, caused issues with table finding.
+- Need to create a crawler to go through my s3 bucket
+- Set up the crawler and add the S3 Bucket as the data source
+- Create IAM role for the crawler to access S3
+- Create new Database for the Data (eicu_db) for this one
+- Set time schedule to on-demand, since i dont have live data at this point
+- Create and Run
+- Data ends up in the data catalog for processing
+- Had issue with: Tables not being in a seperate folder for each, caused issues with table finding.
 
 4. Set up Athena to query and Join the data [ ]
